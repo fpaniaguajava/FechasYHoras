@@ -8,6 +8,7 @@ import java.time.Month;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -109,28 +110,71 @@ public class App {
 		}
 		
 		//Clase Period-->Representa un periodo de tiempo (dias, meses, semanas y años)
+		
+		//Obtención de un Period mediante el método between
 		Period plazoDisponible = Period.between(fechaCertificado, fechaTope);
 		System.out.println(plazoDisponible);//SALIDA P5D
 		plazoDisponible = plazoDisponible.plusDays(1);
 		System.out.println(plazoDisponible);//SALIDA P6D
 		
 		Period _8dias = Period.ofDays(8);
-		System.out.println(_8dias);//SALIDA P8D
+		System.out.println("8 DIAS" + _8dias);//SALIDA P8D
+		
+		Period _3years = Period.ofYears(5);
+		System.out.println("3 AÑOS" + _3years);//SALIDA P3Y
+		
+		Period _period3Y2M2D = Period.parse("P3Y2M21D");
+		System.out.println(_period3Y2M2D);
+		
+		//Periodos tienen métodos de acceso a sus partes:
+		System.out.println(_period3Y2M2D.getDays());
+		System.out.println(String.format("Faltan %d años, %d meses y %d días para el evento", 
+				_period3Y2M2D.getYears(),
+				_period3Y2M2D.getMonths(),
+				_period3Y2M2D.getDays()));
+		//Salida => Faltan 3 años, 2 meses y 21 días para el evento
+		_period3Y2M2D = _period3Y2M2D.minusDays(1);
+		System.out.println(String.format("Faltan %d años, %d meses y %d días para el evento", 
+				_period3Y2M2D.getYears(),
+				_period3Y2M2D.getMonths(),
+				_period3Y2M2D.getDays()));
+		//Salida => Faltan 3 años, 2 meses y 20 días para el evento
 		
 		//Clase Duration-->Representa un periodo de tiempo (nanosegundos, milisegundos, segundos, minutos, horas, dias)  
 		Duration duration = Duration.ofSeconds(10);
+		Duration tiempoRestante = Duration.between(LocalTime.now(), LocalTime.now().plusHours(3).plusMinutes(15));//PT3H15M
+		System.out.println(String.format("Faltan %d horas y %d minutos para terminar la actividad", 
+				(int)(tiempoRestante.getSeconds()/3600),
+				(int)((tiempoRestante.getSeconds()%3600)/60)));
 		
-		//Enumeración ChronoUnit
-		hoy.plus(10, ChronoUnit.DAYS);
-		System.out.println(ChronoUnit.DAYS.between(fechaCertificado, fechaDia));
-		System.out.println(ChronoUnit.WEEKS.between(fechaCertificado, fechaDia));
+		//Enumeración ChronoUnit - Dispone de métodos para saber cuántas unidades temporales hay entre fechas
+		hoy.plus(10, ChronoUnit.DAYS);//Equivalente a hoy.plusDays(10);
 		
+		fechaCertificado = LocalDate.of(2022, 10, 19);
+		System.out.println("Entre fecha certificado y fecha del día hay " + 
+				ChronoUnit.DAYS.between(fechaCertificado, fechaDia) +
+				" días");
+		System.out.println("Entre fecha certificado y fecha del día hay " +
+				ChronoUnit.WEEKS.between(fechaCertificado, fechaDia) +
+				" semanas");
 		
+		//Instant --> Representa un instante de tiempo
 		
-	
-
+		//FORMATEADO DE FECHAS -- Se realiza utilizando la clase DateTimeFormatter
+		LocalDate elDiaDeHoy = LocalDate.now();
+		System.out.println(elDiaDeHoy);
 		
+		DateTimeFormatter dtfISODATE = DateTimeFormatter.BASIC_ISO_DATE;
+		System.out.println(elDiaDeHoy.format(dtfISODATE));
 		
+		DateTimeFormatter dtfPropio1 = DateTimeFormatter.ofPattern("d/M/u");
+		System.out.println(elDiaDeHoy.format(dtfPropio1));
+		DateTimeFormatter dtfPropio2 = DateTimeFormatter.ofPattern("d/M/YY");
+		System.out.println(elDiaDeHoy.format(dtfPropio2));
+		DateTimeFormatter dtfPropio3 = DateTimeFormatter.ofPattern("d 'de' M 'de' YYYY");
+		System.out.println(elDiaDeHoy.format(dtfPropio3));
+		DateTimeFormatter dtfPropio4 = DateTimeFormatter.ofPattern("d 'de' MMM 'de' YYYY");
+		System.out.println(elDiaDeHoy.format(dtfPropio4));
 		
 	} 
 
